@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0f1e"/>
+      <stop offset="50%" style="stop-color:#0d1a3a"/>
+      <stop offset="100%" style="stop-color:#0a0f1e"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#4fc3f7"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="25%" cy="50%" r="40%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0.12"/>
+      <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="80%" cy="50%" r="35%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+  <!-- Grid lines -->
+  <g opacity="0.04" stroke="#00d4ff" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+  <!-- Top accent line -->
+  <rect x="0" y="0" width="1200" height="4" fill="url(#cyan)"/>
+  <!-- PP Badge -->
+  <rect x="80" y="180" width="90" height="90" rx="20" fill="#0d1530" stroke="#00d4ff" stroke-width="2" stroke-opacity="0.5"/>
+  <text x="125" y="242" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="36" fill="#00d4ff">PP</text>
+  <!-- Name -->
+  <text x="80" y="330" font-family="Arial,sans-serif" font-weight="700" font-size="64" fill="white" letter-spacing="-2">Priyanshu Patidar</text>
+  <!-- Role with cyan accent -->
+  <rect x="80" y="355" width="520" height="4" rx="2" fill="url(#cyan)"/>
+  <text x="80" y="410" font-family="Arial,sans-serif" font-weight="400" font-size="28" fill="#00d4ff">Java Full Stack Developer</text>
+  <!-- Tags -->
+  <rect x="80" y="445" width="180" height="36" rx="8" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-opacity="0.4"/>
+  <text x="170" y="469" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#94a3b8">Spring Boot</text>
+  <rect x="275" y="445" width="160" height="36" rx="8" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-opacity="0.4"/>
+  <text x="355" y="469" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#94a3b8">MERN Stack</text>
+  <rect x="450" y="445" width="130" height="36" rx="8" fill="none" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.4"/>
+  <text x="515" y="469" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#94a3b8">AI &amp; RAG</text>
+  <!-- Stats right side -->
+  <rect x="800" y="180" width="320" height="270" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(0,212,255,0.15)" stroke-width="1.5"/>
+  <text x="960" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="18" fill="#64748b" letter-spacing="2">HIGHLIGHTS</text>
+  <text x="860" y="285" font-family="Arial,sans-serif" font-size="15" fill="#94a3b8">🎓  CDAC Bangalore A+ Graduate</text>
+  <text x="860" y="325" font-family="Arial,sans-serif" font-size="15" fill="#94a3b8">🚀  200+ LeetCode Problems Solved</text>
+  <text x="860" y="365" font-family="Arial,sans-serif" font-size="15" fill="#94a3b8">💼  6 Production Applications Built</text>
+  <text x="860" y="405" font-family="Arial,sans-serif" font-size="15" fill="#94a3b8">🏅  IBM Certified — Data Science &amp; ML</text>
+  <text x="860" y="445" font-family="Arial,sans-serif" font-size="15" fill="#00d4ff">🌍  Open to Work · Bangalore, IN</text>
+  <!-- Bottom -->
+  <text x="80" y="585" font-family="Arial,sans-serif" font-size="16" fill="#475569">github.com/Priyanshu-Patidar · linkedin.com/in/priyanshu-patidar-p1672</text>
+</svg>
