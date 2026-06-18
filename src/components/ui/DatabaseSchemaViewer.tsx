@@ -113,10 +113,10 @@ export default function DatabaseSchemaViewer({ schema, color }: Props) {
               const isHovered = hovered === rel.from || hovered === rel.to
               
               // Simplified path calculation
-              const fromX = from.x + 85
-              const fromY = from.y + 20
-              const toX = to.x + 85
-              const toY = to.y + 20
+              const fromX = (from.x || 0) + 85
+              const fromY = (from.y || 0) + 20
+              const toX = (to.x || 0) + 85
+              const toY = (to.y || 0) + 20
               
               const dx = toX - fromX
               const dy = toY - fromY
@@ -166,8 +166,8 @@ export default function DatabaseSchemaViewer({ schema, color }: Props) {
                 <div style={{ padding:'6px 0' }}>
                   {entity.fields.slice(0,4).map((f, i) => (
                     <div key={i} style={{ padding:'3px 10px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                      <span style={{ fontFamily:'Inter,sans-serif', fontSize:'0.65rem', color:f.isPk?'#f59e0b':'var(--text-secondary)', fontWeight:f.isPk?'600':'400', display:'flex', alignItems:'center', gap:'4px' }}>
-                        {f.isPk && <span style={{fontSize:'0.5rem'}}>🔑</span>}
+                      <span style={{ fontFamily:'Inter,sans-serif', fontSize:'0.65rem', color:f.pk?'#f59e0b':'var(--text-secondary)', fontWeight:f.pk?'600':'400', display:'flex', alignItems:'center', gap:'4px' }}>
+                        {f.pk && <span style={{fontSize:'0.5rem'}}>🔑</span>}
                         {f.name}
                       </span>
                       <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:'0.6rem', color:'var(--text-muted)' }}>{f.type}</span>
@@ -210,7 +210,7 @@ export default function DatabaseSchemaViewer({ schema, color }: Props) {
               </button>
             </div>
 
-            <p style={{ fontFamily:'Inter,sans-serif', fontSize:'0.82rem', lineHeight:1.7, color:'var(--text-secondary)', margin:'0 0 1.5rem' }}>{selected.description}</p>
+            <p style={{ fontFamily:'Inter,sans-serif', fontSize:'0.82rem', lineHeight:1.7, color:'var(--text-secondary)', margin:'0 0 1.5rem' }}>{selected.purpose}</p>
 
             <div style={{ fontSize:'0.7rem', fontWeight:'700', color, textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:'0.75rem', borderBottom:'1px solid rgba(255,255,255,0.1)', paddingBottom:'0.5rem' }}>
               Schema Definition
@@ -220,8 +220,8 @@ export default function DatabaseSchemaViewer({ schema, color }: Props) {
               {selected.fields.map((f, i) => (
                 <div key={i} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0.6rem 0.8rem', background:'rgba(255,255,255,0.02)', borderRadius:'8px', border:'1px solid rgba(255,255,255,0.05)' }}>
                   <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                    {f.isPk ? <span style={{fontSize:'0.7rem'}} title="Primary Key">🔑</span> : f.isFk ? <span style={{fontSize:'0.7rem'}} title="Foreign Key">🔗</span> : <span style={{width:'0.7rem'}}/>}
-                    <span style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'0.8rem', fontWeight:'600', color: f.isPk ? '#f59e0b' : 'var(--text-primary)' }}>{f.name}</span>
+                    {f.pk ? <span style={{fontSize:'0.7rem'}} title="Primary Key">🔑</span> : f.fk ? <span style={{fontSize:'0.7rem'}} title="Foreign Key">🔗</span> : <span style={{width:'0.7rem'}}/>}
+                    <span style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'0.8rem', fontWeight:'600', color: f.pk ? '#f59e0b' : 'var(--text-primary)' }}>{f.name}</span>
                   </div>
                   <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:'0.7rem', color:'var(--text-muted)', background:'rgba(0,0,0,0.3)', padding:'2px 6px', borderRadius:'4px' }}>{f.type}</span>
                 </div>

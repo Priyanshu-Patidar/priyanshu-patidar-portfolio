@@ -13,17 +13,21 @@ export interface SchemaField {
 export interface SchemaEntity {
   name: string
   purpose: string
+  icon?: string
+  x?: number
+  y?: number
   fields: SchemaField[]
 }
 
 export interface SchemaRelationship {
   from: string           // entity name
   to: string             // entity name
-  type: 'one-to-one' | 'one-to-many' | 'many-to-many'
+  type: '1:1' | '1:N' | 'N:M' | 'one-to-one' | 'one-to-many' | 'many-to-many'
   label: string          // short description of the relationship
 }
 
 export interface DatabaseSchema {
+  title?: string
   dbType: string          // e.g. "H2 (in-memory) via JPA/Hibernate"
   entities: SchemaEntity[]
   relationships: SchemaRelationship[]
@@ -32,10 +36,13 @@ export interface DatabaseSchema {
 export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
   // 1 — SmartCar Parking Management System
   1: {
+    title: 'Parking Lot ER Diagram',
     dbType: 'H2 In-Memory Database via JPA/Hibernate',
     entities: [
       {
         name: 'ParkingLot',
+        icon: '🏢',
+        x: 20, y: 50,
         purpose: 'Stores the configuration of a parking lot: its dimensions and pedestrian exit positions.',
         fields: [
           { name: 'lot_id', type: 'Long', pk: true },
@@ -46,6 +53,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'Bay',
+        icon: '🅿️',
+        x: 50, y: 50,
         purpose: 'Represents a single parking bay within a lot — its position, occupancy, and accessibility restriction.',
         fields: [
           { name: 'bay_id', type: 'Long', pk: true },
@@ -57,6 +66,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'Car',
+        icon: '🚗',
+        x: 80, y: 50,
         purpose: 'A vehicle currently parked in a bay — its registration and type (standard or disabled).',
         fields: [
           { name: 'car_id', type: 'Long', pk: true },
@@ -67,17 +78,20 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
     ],
     relationships: [
-      { from: 'ParkingLot', to: 'Bay', type: 'one-to-many', label: 'One ParkingLot has many Bays' },
-      { from: 'Bay', to: 'Car', type: 'one-to-one', label: 'A Bay holds at most one Car at a time' },
+      { from: 'ParkingLot', to: 'Bay', type: '1:N', label: 'One ParkingLot has many Bays' },
+      { from: 'Bay', to: 'Car', type: '1:1', label: 'A Bay holds at most one Car at a time' },
     ],
   },
 
   // 2 — AI Resume Analyzer (RAG System)
   2: {
+    title: 'RAG Database Schema',
     dbType: 'Supabase (PostgreSQL) with pgvector extension',
     entities: [
       {
         name: 'resumes',
+        icon: '📄',
+        x: 30, y: 30,
         purpose: 'Stores uploaded resume metadata and raw extracted text.',
         fields: [
           { name: 'id', type: 'UUID', pk: true },
@@ -89,6 +103,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'resume_chunks',
+        icon: '🧩',
+        x: 70, y: 30,
         purpose: 'Chunked sections of a resume with their vector embeddings, used for semantic search.',
         fields: [
           { name: 'id', type: 'UUID', pk: true },
@@ -100,6 +116,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'job_descriptions',
+        icon: '💼',
+        x: 30, y: 70,
         purpose: 'Stores job description text and its embedding for similarity matching.',
         fields: [
           { name: 'id', type: 'UUID', pk: true },
@@ -110,6 +128,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'analyses',
+        icon: '📊',
+        x: 70, y: 70,
         purpose: 'A single match-analysis result linking a resume to a job description, with the AI-generated score and feedback.',
         fields: [
           { name: 'id', type: 'UUID', pk: true },
@@ -122,18 +142,21 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
     ],
     relationships: [
-      { from: 'resumes', to: 'resume_chunks', type: 'one-to-many', label: 'One resume is split into many chunks' },
-      { from: 'resumes', to: 'analyses', type: 'one-to-many', label: 'One resume can be analyzed against many job descriptions' },
-      { from: 'job_descriptions', to: 'analyses', type: 'one-to-many', label: 'One job description can be matched against many resumes' },
+      { from: 'resumes', to: 'resume_chunks', type: '1:N', label: 'One resume is split into many chunks' },
+      { from: 'resumes', to: 'analyses', type: '1:N', label: 'One resume can be analyzed against many job descriptions' },
+      { from: 'job_descriptions', to: 'analyses', type: '1:N', label: 'One job description can be matched against many resumes' },
     ],
   },
 
   // 3 — Smart Employee Management Portal (.NET / EF Core)
   3: {
+    title: 'Employee Portal ERD',
     dbType: 'SQL Server via Entity Framework Core',
     entities: [
       {
         name: 'Department',
+        icon: '🏢',
+        x: 30, y: 50,
         purpose: 'Represents an organizational department that employees belong to.',
         fields: [
           { name: 'DepartmentId', type: 'int', pk: true },
@@ -143,6 +166,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'Employee',
+        icon: '👤',
+        x: 70, y: 50,
         purpose: 'Stores employee records including personal details and department assignment.',
         fields: [
           { name: 'EmployeeId', type: 'int', pk: true },
@@ -155,16 +180,19 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
     ],
     relationships: [
-      { from: 'Department', to: 'Employee', type: 'one-to-many', label: 'One Department has many Employees' },
+      { from: 'Department', to: 'Employee', type: '1:N', label: 'One Department has many Employees' },
     ],
   },
 
   // 4 — Flickart E-Commerce (MERN / Mongoose)
   4: {
+    title: 'E-Commerce Schema',
     dbType: 'MongoDB via Mongoose ODM',
     entities: [
       {
         name: 'User',
+        icon: '👤',
+        x: 20, y: 30,
         purpose: 'Registered users — both customers and admins, distinguished by role.',
         fields: [
           { name: '_id', type: 'ObjectId', pk: true },
@@ -176,6 +204,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'Product',
+        icon: '📦',
+        x: 80, y: 30,
         purpose: 'Catalog items available for purchase, including Cloudinary-hosted images.',
         fields: [
           { name: '_id', type: 'ObjectId', pk: true },
@@ -188,6 +218,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
       {
         name: 'Order',
+        icon: '🛒',
+        x: 50, y: 70,
         purpose: 'A placed order linking a user to the products they purchased, with payment status.',
         fields: [
           { name: '_id', type: 'ObjectId', pk: true },
@@ -201,8 +233,8 @@ export const DATABASE_SCHEMAS: Record<number, DatabaseSchema> = {
       },
     ],
     relationships: [
-      { from: 'User', to: 'Order', type: 'one-to-many', label: 'One User can place many Orders' },
-      { from: 'Product', to: 'Order', type: 'many-to-many', label: 'Orders reference many Products (via items array); a Product can appear in many Orders' },
+      { from: 'User', to: 'Order', type: '1:N', label: 'One User can place many Orders' },
+      { from: 'Product', to: 'Order', type: 'N:M', label: 'Orders reference many Products (via items array); a Product can appear in many Orders' },
     ],
   },
 }
