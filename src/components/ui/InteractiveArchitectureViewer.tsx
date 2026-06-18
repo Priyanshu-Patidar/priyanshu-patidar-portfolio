@@ -24,25 +24,40 @@ export default function InteractiveArchitectureViewer({ architecture, color }: P
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 })
   const [selected, setSelected] = useState<ArchNode | null>(null)
   const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 })
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     setDragging(true)
-    dragStart.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y }
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    dragStart.current = { x: clientX, y: clientY, panX: pan.x, panY: pan.y }
   }
-  const handleMouseMove = useCallback((e: MouseEvent) => {
+
+  const handleMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (!dragging) return
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY
+    
     setPan({
-      x: dragStart.current.panX + (e.clientX - dragStart.current.x),
-      y: dragStart.current.panY + (e.clientY - dragStart.current.y),
+      x: dragStart.current.panX + (clientX - dragStart.current.x),
+      y: dragStart.current.panY + (clientY - dragStart.current.y),
     })
   }, [dragging])
+
   const handleMouseUp = useCallback(() => setDragging(false), [])
 
   useEffect(() => {
     if (dragging) {
       window.addEventListener('mousemove', handleMouseMove)
       window.addEventListener('mouseup', handleMouseUp)
-      return () => { window.removeEventListener('mousemove', handleMouseMove); window.removeEventListener('mouseup', handleMouseUp) }
+      window.addEventListener('touchmove', handleMouseMove, { passive: false })
+      window.addEventListener('touchend', handleMouseUp)
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('mouseup', handleMouseUp)
+        window.removeEventListener('touchmove', handleMouseMove)
+        window.removeEventListener('touchend', handleMouseUp)
+      }
     }
   }, [dragging, handleMouseMove, handleMouseUp])
 
@@ -59,7 +74,12 @@ export default function InteractiveArchitectureViewer({ architecture, color }: P
 
   const zoomIn = () => setZoom(z => Math.min(z + 0.2, 2.5))
   const zoomOut = () => setZoom(z => Math.max(z - 0.2, 0.4))
-  const resetView = () => { setZoom(1); setPan({ x: 0, y: 0 }) }
+  const resetView = () => { setZoom(isMobile ? 0.7 : 1); setPan({ x: 0, y: 0 }) }
+
+  // Initial mobile zoom
+  useEffect(() => {
+    if (isMobile) setZoom(0.7)
+  }, [isMobile])
 
   const findNode = (id: string) => architecture.nodes.find(n => n.id === id)
 
@@ -67,13 +87,14 @@ export default function InteractiveArchitectureViewer({ architecture, color }: P
     <div style={{
       position:'relative', borderRadius:'12px', overflow:'hidden',
       border:'1px solid rgba(255,255,255,0.07)', background:'rgba(0,0,0,0.25)',
-      height: fullscreen ? '100%' : '380px',
+      height: fullscreen ? '100%' : isMobile ? '300px' : '380px',
+      touchAction: 'none'
     }}>
       {/* Toolbar */}
       <div style={{ position:'absolute', top:'10px', right:'10px', zIndex:3, display:'flex', gap:'6px' }}>
-        <ToolBtn onClick={zoomOut} label="Zoom out">−</ToolBtn>
+        {!isMobile && <ToolBtn onClick={zoomOut} label="Zoom out">−</ToolBtn>}
         <ToolBtn onClick={resetView} label="Reset view">{Math.round(zoom * 100)}%</ToolBtn>
-        <ToolBtn onClick={zoomIn} label="Zoom in">+</ToolBtn>
+        {!isMobile && <ToolBtn onClick={zoomIn} label="Zoom in">+</ToolBtn>}
         <ToolBtn onClick={() => setFullscreen(f => !f)} label={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
           {fullscreen ? '⤓' : '⤢'}
         </ToolBtn>
@@ -86,6 +107,7 @@ export default function InteractiveArchitectureViewer({ architecture, color }: P
       {/* Pannable/zoomable canvas */}
       <div
         onMouseDown={handleMouseDown}
+        onTouchStart={handleMouseDown}
         style={{ width:'100%', height:'100%', cursor: dragging ? 'grabbing' : 'grab', overflow:'hidden', position:'relative' }}
       >
         <div style={{

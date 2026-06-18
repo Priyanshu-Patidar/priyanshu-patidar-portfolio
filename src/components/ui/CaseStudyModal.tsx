@@ -20,6 +20,7 @@ export default function CaseStudyModal({ project, onClose }: Props) {
   const study = CASE_STUDIES[project.id]
   const architecture = ARCHITECTURE_NODES[project.id]
   const c = project.color
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -31,32 +32,36 @@ export default function CaseStudyModal({ project, onClose }: Props) {
   if (!study) return null
 
   return (
-    <div style={{ position:'fixed', inset:0, zIndex:9000, display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem' }}>
+    <div style={{ position:'fixed', inset:0, zIndex:9000, display:'flex', alignItems:'center', justifyContent:'center', padding: isMobile ? '0' : '1rem' }}>
       <div onClick={onClose} style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.9)', backdropFilter:'blur(10px)' }} />
 
       <div style={{
-        position:'relative', zIndex:1, width:'100%', maxWidth:'920px', maxHeight:'94vh', overflowY:'auto',
-        background:'rgba(8,12,26,0.98)', border:`1px solid ${c}30`, borderRadius:'22px',
+        position:'relative', zIndex:1, width:'100%', maxWidth:'920px', 
+        height: isMobile ? '100%' : '94vh', overflowY:'auto',
+        background:'rgba(8,12,26,0.98)', 
+        border: isMobile ? 'none' : `1px solid ${c}30`, 
+        borderRadius: isMobile ? '0' : '22px',
         boxShadow:`0 0 70px ${c}15, 0 30px 90px rgba(0,0,0,0.7)`,
         animation:'cs-up 0.4s cubic-bezier(0.34,1.56,0.64,1)',
       }}>
-        <div style={{ height:'3px', background:`linear-gradient(90deg,transparent,${c},transparent)`, borderRadius:'22px 22px 0 0' }} />
+        <div style={{ height:'3px', background:`linear-gradient(90deg,transparent,${c},transparent)`, borderRadius: isMobile ? '0' : '22px 22px 0 0' }} />
 
         {/* Sticky header */}
         <div style={{
-          position:'sticky', top:0, zIndex:2, padding:'1.5rem 2rem 1.25rem',
+          position:'sticky', top:0, zIndex:2, 
+          padding: isMobile ? '1.25rem 1.5rem 1rem' : '1.5rem 2rem 1.25rem',
           background:'rgba(8,12,26,0.97)', backdropFilter:'blur(12px)',
           borderBottom:'1px solid rgba(255,255,255,0.06)',
           display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'1rem',
         }}>
           <div>
-            <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'0.5rem' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'0.5rem', flexWrap: 'wrap' }}>
               <span style={{ padding:'3px 10px', borderRadius:'6px', background:c+'18', border:`1px solid ${c}30`, fontSize:'0.65rem', fontWeight:'700', color:c, textTransform:'uppercase', letterSpacing:'0.1em' }}>
                 Case Study
               </span>
               <span style={{ fontSize:'0.7rem', color:'var(--text-muted)' }}>{project.category}</span>
             </div>
-            <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:'700', fontSize:'1.3rem', color:'var(--text-primary)', margin:0, lineHeight:1.25 }}>
+            <h2 style={{ fontFamily:'Space Grotesk,sans-serif', fontWeight:'700', fontSize: isMobile ? '1.1rem' : '1.3rem', color:'var(--text-primary)', margin:0, lineHeight:1.25 }}>
               {project.icon} {project.title}
             </h2>
           </div>
@@ -73,7 +78,7 @@ export default function CaseStudyModal({ project, onClose }: Props) {
           </button>
         </div>
 
-        <div style={{ padding:'1.75rem 2rem 2.5rem' }}>
+        <div style={{ padding: isMobile ? '1.5rem 1rem 2rem' : '1.75rem 2rem 2.5rem' }}>
 
           {/* 1. Problem Statement */}
           <CSSection num={1} title="Problem Statement" color={c}>
