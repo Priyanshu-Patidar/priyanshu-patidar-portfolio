@@ -3,7 +3,7 @@ import { PERSONAL_INFO } from '@/data/constants'
 import { scrollToSection } from '@/utils/helpers'
 import ResumeModal from '@/components/ui/ResumeModal'
 import { getTechIcon } from '@/components/ui/TechIcons'
-import { useVisitorCount } from '@/hooks'
+import { useVisitorCount, useResumeDownloadCount } from '@/hooks'
 import { OpenToRelocationBadge } from '@/components/ui/RecruiterBadges'
 const RecruiterDashboard = lazy(() => import('@/components/ui/RecruiterDashboard'))
 
@@ -54,6 +54,7 @@ export default function Hero() {
   const [showBurst, setShowBurst] = useState(false)
   const [showRecruiterMode, setShowRecruiterMode] = useState(false)
   const portfolioViews = useVisitorCount()
+  const { increment: incrementResumeDownload } = useResumeDownloadCount()
 
   // Particle canvas
   useEffect(() => {
@@ -338,7 +339,10 @@ export default function Hero() {
 
               <button
                 data-resume-trigger
-                onClick={() => setShowResume(true)}
+                onClick={() => {
+                  setShowResume(true)
+                  incrementResumeDownload()
+                }}
                 style={{
                   padding: '0.7rem 1.6rem', borderRadius: '10px',
                   background: 'transparent',

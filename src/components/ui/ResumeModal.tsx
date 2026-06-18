@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function ResumeModal({ onClose }: Props) {
-  const { count } = useResumeDownloadCount()
+  const { count, increment } = useResumeDownloadCount()
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   useEffect(() => {
@@ -18,8 +18,7 @@ export default function ResumeModal({ onClose }: Props) {
   }, [onClose])
 
   const handleDownload = () => {
-    // Analytics tracked via individual component if needed, 
-    // but the link itself will trigger the browser download.
+    increment()
   }
 
   return (
@@ -181,7 +180,7 @@ export default function ResumeModal({ onClose }: Props) {
                   <p style={{ color:'var(--text-primary)', fontSize:'1rem', fontWeight:'600', marginBottom:'0.5rem' }}>PDF Preview Unavailable</p>
                   <p style={{ color:'var(--text-muted)', fontSize:'0.85rem', maxWidth:'300px' }}>Your browser doesn't support viewing PDFs directly. You can download the file to view it.</p>
                 </div>
-                <a href={PERSONAL_INFO.resumePDF} download style={{ padding:'0.7rem 1.5rem', borderRadius:'10px', background:'rgba(0,212,255,0.1)', border:'1px solid rgba(0,212,255,0.3)', color:'#00d4ff', textDecoration:'none', fontSize:'0.85rem', fontWeight:'600' }}>
+                <a href={PERSONAL_INFO.resumePDF} download onClick={handleDownload} style={{ padding:'0.7rem 1.5rem', borderRadius:'10px', background:'rgba(0,212,255,0.1)', border:'1px solid rgba(0,212,255,0.3)', color:'#00d4ff', textDecoration:'none', fontSize:'0.85rem', fontWeight:'600' }}>
                   Download Resume PDF
                 </a>
               </div>
