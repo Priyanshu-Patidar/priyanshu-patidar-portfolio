@@ -188,8 +188,7 @@ export function useLeetCodeStats(): UseLeetCodeStatsResult {
   return { ...stats, refresh }
 }
 
-// ─── View Counters (LocalStorage fallback since CountAPI is deprecated) ──────────
-const VISITOR_KEY = 'portfolio-views'
+// ─── View Counters (Centralized via Vercel KV) ──────────────────────────────────
 const VISITOR_SESSION_FLAG = 'portfolio-session-counted'
 
 export function useVisitorCount() {
@@ -198,58 +197,56 @@ export function useVisitorCount() {
   useEffect(() => {
     const alreadyCounted = sessionStorage.getItem(VISITOR_SESSION_FLAG) === '1'
 
-    const fallback = () => {
+    const sync = async () => {
       try {
-        const stored = parseInt(localStorage.getItem('portfolio-visits') || '0')
-        const newCount = alreadyCounted ? Math.max(stored, 100) : Math.max(stored + 1, 100)
-        localStorage.setItem('portfolio-visits', String(newCount))
-        setCount(newCount)
-      } catch { setCount(100) }
+        const method = alreadyCounted ? 'GET' : 'POST'
+        const res = await fetch(`/api/stats?type=view`, { method })
+        if (res.ok) {
+          const data = await res.json()
+          setCount(data.count)
+          if (!alreadyCounted) sessionStorage.setItem(VISITOR_SESSION_FLAG, '1')
+        }
+      } catch (err) {
+        // Fallback to local if API fails
+        const stored = parseInt(localStorage.getItem('portfolio-visits') || '100')
+        setCount(stored)
+      }
     }
 
-    if (!alreadyCounted) {
-      sessionStorage.setItem(VISITOR_SESSION_FLAG, '1')
-    }
-    
-    // Slight delay to mimic network and allow paint
-    setTimeout(fallback, 100)
+    sync()
   }, [])
 
   return count
 }
 
-// ─── useProjectViews ──────────────────────────────────────────────────────────
 export function useProjectViews(projectId: number, trigger: boolean) {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
     if (!trigger) return
 
-    const key = `project-${projectId}-views`
     const sessionKey = `project-${projectId}-counted`
     const alreadyCounted = sessionStorage.getItem(sessionKey) === '1'
 
-    const fallback = () => {
+    const sync = async () => {
       try {
-        const stored = parseInt(localStorage.getItem(key) || '0')
-        const newCount = alreadyCounted ? stored : stored + 1
-        localStorage.setItem(key, String(newCount))
-        setCount(newCount)
-      } catch { setCount(0) }
+        const method = alreadyCounted ? 'GET' : 'POST'
+        const res = await fetch(`/api/stats?type=project&projectId=${projectId}`, { method })
+        if (res.ok) {
+          const data = await res.json()
+          setCount(data.count)
+          if (!alreadyCounted) sessionStorage.setItem(sessionKey, '1')
+        }
+      } catch {}
     }
 
-    if (!alreadyCounted) {
-      sessionStorage.setItem(sessionKey, '1')
-    }
-    
-    setTimeout(fallback, 100)
+    sync()
   }, [projectId, trigger])
 
   return count
 }
 
 // ─── useResumeDownloadCount ───────────────────────────────────────────────────
-const RESUME_KEY = 'resume-downloads'
 const RESUME_BASELINE = 25
 
 export function useResumeDownloadCount() {
@@ -257,24 +254,31 @@ export function useResumeDownloadCount() {
   const firing = useRef(false)
 
   useEffect(() => {
-    try {
-      const stored = parseInt(localStorage.getItem(RESUME_KEY) || String(RESUME_BASELINE))
-      setCount(Math.max(stored, RESUME_BASELINE))
-    } catch { setCount(RESUME_BASELINE) }
+    const fetchInitial = async () => {
+      try {
+        const res = await fetch('/api/stats?type=resume')
+        if (res.ok) {
+          const data = await res.json()
+          setCount(data.count)
+        }
+      } catch {}
+    }
+    fetchInitial()
   }, [])
 
-  const increment = useCallback(() => {
+  const increment = useCallback(async () => {
     if (firing.current) return
     firing.current = true
 
     try {
-      const stored = parseInt(localStorage.getItem(RESUME_KEY) || String(RESUME_BASELINE))
-      const newCount = stored + 1
-      localStorage.setItem(RESUME_KEY, String(newCount))
-      setCount(newCount)
+      const res = await fetch('/api/stats?type=resume', { method: 'POST' })
+      if (res.ok) {
+        const data = await res.json()
+        setCount(data.count)
+      }
     } catch {}
     
-    setTimeout(() => { firing.current = false }, 300)
+    setTimeout(() => { firing.current = false }, 1000)
   }, [])
 
   return { count, increment }
