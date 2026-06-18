@@ -200,7 +200,11 @@ export function useVisitorCount() {
     const sync = async () => {
       try {
         const method = alreadyCounted ? 'GET' : 'POST'
-        const res = await fetch(`/api/stats?type=view`, { method })
+        const res = await fetch(`/api/stats?type=view`, { 
+          method,
+          body: method === 'POST' ? JSON.stringify({}) : undefined,
+          headers: method === 'POST' ? { 'Content-Type': 'application/json' } : {}
+        })
         if (res.ok) {
           const data = await res.json()
           setCount(data.count)
@@ -231,7 +235,12 @@ export function useProjectViews(projectId: number, trigger: boolean) {
     const sync = async () => {
       try {
         const method = alreadyCounted ? 'GET' : 'POST'
-        const res = await fetch(`/api/stats?type=project&projectId=${projectId}`, { method })
+        const res = await fetch(`/api/stats?type=project&projectId=${projectId}`, { 
+          method,
+          // POST requests sometimes require a body in certain environments
+          body: method === 'POST' ? JSON.stringify({}) : undefined,
+          headers: method === 'POST' ? { 'Content-Type': 'application/json' } : {}
+        })
         if (res.ok) {
           const data = await res.json()
           setCount(data.count)
@@ -271,7 +280,11 @@ export function useResumeDownloadCount() {
     firing.current = true
 
     try {
-      const res = await fetch('/api/stats?type=resume', { method: 'POST' })
+      const res = await fetch('/api/stats?type=resume', { 
+        method: 'POST',
+        body: JSON.stringify({}),
+        headers: { 'Content-Type': 'application/json' }
+      })
       if (res.ok) {
         const data = await res.json()
         setCount(data.count)

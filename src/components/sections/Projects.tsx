@@ -365,7 +365,7 @@ function ProjectModal({ project, onClose, onOpenCaseStudy }: { project:Project; 
               fontSize:'0.7rem', fontWeight:'600', color:'white',
               fontFamily:'JetBrains Mono,monospace',
             }}>
-              👁 {views > 0 ? views.toLocaleString() : '—'} Project Views
+              👁 {views >= 0 ? views.toLocaleString() : '—'} Project Views
             </div>
           </div>
 
