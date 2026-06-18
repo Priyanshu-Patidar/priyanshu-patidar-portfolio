@@ -157,28 +157,36 @@ export default function ResumeModal({ onClose }: Props) {
 
         {/* PDF Viewport */}
         <div style={{ flex:1, position:'relative', background: '#323639' }}>
-          <object
-            data={PERSONAL_INFO.resumePDF + '#toolbar=0&navpanes=0&scrollbar=1'}
-            type="application/pdf"
-            style={{ width:'100%', height:'100%', display:'block' }}
-          >
-            <div style={{ 
-              position:'absolute', inset:0, display:'flex', flexDirection:'column', 
-              alignItems:'center', justifyContent:'center', gap:'1.5rem', 
-              padding:'2rem', textAlign:'center', background:'rgba(10,15,30,1)' 
-            }}>
-              <div style={{ width:'64px', height:'64px', borderRadius:'16px', background:'rgba(0,212,255,0.1)', border:'1px solid rgba(0,212,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          {isMobile ? (
+            <iframe
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + PERSONAL_INFO.resumePDF)}&embedded=true`}
+              style={{ width:'100%', height:'100%', border:'none' }}
+              title="Resume PDF"
+            />
+          ) : (
+            <object
+              data={PERSONAL_INFO.resumePDF + '#toolbar=0&navpanes=0&scrollbar=1'}
+              type="application/pdf"
+              style={{ width:'100%', height:'100%', display:'block' }}
+            >
+              <div style={{ 
+                position:'absolute', inset:0, display:'flex', flexDirection:'column', 
+                alignItems:'center', justifyContent:'center', gap:'1.5rem', 
+                padding:'2rem', textAlign:'center', background:'rgba(10,15,30,1)' 
+              }}>
+                <div style={{ width:'64px', height:'64px', borderRadius:'16px', background:'rgba(0,212,255,0.1)', border:'1px solid rgba(0,212,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div>
+                  <p style={{ color:'var(--text-primary)', fontSize:'1rem', fontWeight:'600', marginBottom:'0.5rem' }}>PDF Preview Unavailable</p>
+                  <p style={{ color:'var(--text-muted)', fontSize:'0.85rem', maxWidth:'300px' }}>Your browser doesn't support viewing PDFs directly. You can download the file to view it.</p>
+                </div>
+                <a href={PERSONAL_INFO.resumePDF} download style={{ padding:'0.7rem 1.5rem', borderRadius:'10px', background:'rgba(0,212,255,0.1)', border:'1px solid rgba(0,212,255,0.3)', color:'#00d4ff', textDecoration:'none', fontSize:'0.85rem', fontWeight:'600' }}>
+                  Download Resume PDF
+                </a>
               </div>
-              <div>
-                <p style={{ color:'var(--text-primary)', fontSize:'1rem', fontWeight:'600', marginBottom:'0.5rem' }}>PDF Preview Unavailable</p>
-                <p style={{ color:'var(--text-muted)', fontSize:'0.85rem', maxWidth:'300px' }}>Your browser doesn't support viewing PDFs directly. You can download the file to view it.</p>
-              </div>
-              <a href={PERSONAL_INFO.resumePDF} download style={{ padding:'0.7rem 1.5rem', borderRadius:'10px', background:'rgba(0,212,255,0.1)', border:'1px solid rgba(0,212,255,0.3)', color:'#00d4ff', textDecoration:'none', fontSize:'0.85rem', fontWeight:'600' }}>
-                Download Resume PDF
-              </a>
-            </div>
-          </object>
+            </object>
+          )}
         </div>
 
         {/* Mobile Download Notice */}
