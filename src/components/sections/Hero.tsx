@@ -341,7 +341,6 @@ export default function Hero() {
                 data-resume-trigger
                 onClick={() => {
                   setShowResume(true)
-                  incrementResumeDownload()
                 }}
                 style={{
                   padding: '0.7rem 1.6rem', borderRadius: '10px',
